@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>증여세 계산기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+
+    <header class="card__header">
+      <h1>증여세 계산기</h1>
+      <p class="scope">
+        현재 <strong>부모 → 성인 자녀 현금 증여</strong>만 지원합니다.
+      </p>
+    </header>
+
+    <section class="field">
+      <label class="field__label" for="amount">증여받은 금액</label>
+
+      <div class="field__input">
+        <input
+          id="amount"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          placeholder="0"
+          maxlength="19"
+          aria-describedby="amount-hint">
+        <span class="field__unit">원</span>
+      </div>
+
+      <p id="amount-hint" class="hint" role="status">금액을 입력해 주세요.</p>
+    </section>
+
+  </main>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
