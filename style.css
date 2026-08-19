@@ -1,22 +1,34 @@
-/* 색과 크기를 한곳에 모아둔다. 여기만 바꾸면 전체 톤이 바뀐다. */
+/* ──────────────────────────────────────────────────────────────
+   증여세 계산기
+   세무 서류의 계산 양식을 그대로 가져왔다.
+   왼쪽에 연산 기호(− × =)를 두고, 소계선과 합계선을 긋는다.
+   숫자는 고정폭 글꼴이라 자릿수가 세로로 정확히 맞는다.
+   ────────────────────────────────────────────────────────────── */
+
 :root {
-  --bg: #f5f6f8;
-  --card-bg: #ffffff;
-  --text: #1a1c1f;
-  --text-dim: #6b7280;
-  --line: #d9dce1;
-  --accent: #1d4ed8;
-  --radius: 14px;
+  --paper:       #eef0ec;
+  --sheet:       #ffffff;
+  --ink:         #16212a;
+  --ink-soft:    #5a6a74;
+  --ink-faint:   #93a1a9;
+  --rule:        #d3dad7;
+  --rule-strong: #16212a;
+  --seal:        #0f4c5c;
+
+  --sans: system-ui, "Segoe UI", "Malgun Gothic", sans-serif;
+  --nums: ui-monospace, "Cascadia Mono", Consolas, "Menlo", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #16181c;
-    --card-bg: #1f2227;
-    --text: #e8eaed;
-    --text-dim: #9aa1ab;
-    --line: #343941;
-    --accent: #7aa2ff;
+    --paper:       #14181a;
+    --sheet:       #1c2124;
+    --ink:         #e6eaec;
+    --ink-soft:    #9aa7ad;
+    --ink-faint:   #6b7981;
+    --rule:        #2f383c;
+    --rule-strong: #e6eaec;
+    --seal:        #7fc9dc;
   }
 }
 
@@ -24,85 +36,236 @@
 
 body {
   margin: 0;
-  padding: 24px 16px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, "Segoe UI", "Malgun Gothic", sans-serif;
+  padding: 28px 16px 56px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
   line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
 }
 
-.card {
-  max-width: 480px;
+.sheet {
+  max-width: 460px;
   margin: 0 auto;
-  padding: 28px 24px;
-  background: var(--card-bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  padding: 26px 22px 22px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 4px;   /* 서류처럼 각지게 */
 }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 1.5rem;
+/* ── 머리말 ───────────────────────────────────────────────── */
+
+.sheet__title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.scope {
-  margin: 0 0 28px;
-  padding: 10px 12px;
-  background: var(--bg);
-  border-radius: 8px;
-  color: var(--text-dim);
-  font-size: 0.875rem;
+.sheet__scope {
+  margin: 6px 0 26px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
 }
 
-.field__label {
+/* ── 금액 입력 ────────────────────────────────────────────── */
+
+.entry__label {
   display: block;
   margin-bottom: 8px;
+  font-size: 0.8rem;
   font-weight: 600;
-  font-size: 0.95rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
 }
 
-/* 입력칸과 '원' 글자를 한 덩어리처럼 보이게 묶는다 */
-.field__input {
+.entry__field {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 14px;
-  background: var(--card-bg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--rule-strong);
 }
 
-.field__input:focus-within {
-  border-color: var(--accent);
-}
+.entry__field:focus-within { border-bottom-color: var(--seal); }
 
-.field__input input {
+.entry__field input {
   flex: 1;
   min-width: 0;
-  border: none;
-  outline: none;
+  border: 0;
+  outline: 0;
   background: transparent;
-  color: var(--text);
-  font-size: 1.375rem;
+  color: var(--ink);
+  font-family: var(--nums);
+  font-size: 1.5rem;
   font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.field__unit {
-  color: var(--text-dim);
-  font-size: 1rem;
+.entry__field input::placeholder { color: var(--ink-faint); }
+
+.entry__unit {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
 }
 
-.hint {
-  margin: 10px 2px 0;
-  min-height: 1.6em;
-  color: var(--text-dim);
-  font-size: 0.9rem;
+.entry__reading {
+  margin: 8px 0 0;
+  min-height: 1.5em;
+  text-align: right;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
 }
 
-/* 금액이 제대로 들어왔을 때만 강조 */
-.hint.is-filled {
-  color: var(--accent);
+.entry__reading.is-filled {
+  color: var(--seal);
   font-weight: 600;
+}
+
+/* ── 계산 내역 ────────────────────────────────────────────── */
+
+.ledger { margin-top: 34px; }
+
+.ledger__caption {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  letter-spacing: 0.16em;
+}
+
+.ledger__empty {
+  margin: 0;
+  padding: 22px 0;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* 한 줄 = [연산기호] [항목] [금액] */
+.row {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr auto;
+  align-items: baseline;
+  gap: 0 10px;
+  padding: 9px 0;
+}
+
+.row__op {
+  font-family: var(--nums);
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+}
+
+.row__label {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.row__sub {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+}
+
+.row__value {
+  font-family: var(--nums);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 빼는 항목은 한 톤 물러난다 */
+.row--deduct .row__value { color: var(--ink-soft); }
+
+/* 소계선 — 회계 장부의 가로줄 */
+.row--subtotal {
+  border-top: 1px solid var(--rule);
+  margin-top: -1px;
+}
+
+.row--subtotal .row__label,
+.row--subtotal .row__value {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── 최종 결과 ────────────────────────────────────────────── */
+
+/* 합계선 — 회계 장부는 최종 합계 위에 두 줄을 긋는다 */
+.verdict {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 3px double var(--rule-strong);
+  text-align: right;
+}
+
+.verdict__label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+}
+
+.verdict__amount {
+  margin: 2px 0 0;
+  font-family: var(--nums);
+  /* 좁은 화면에서 조 단위 금액이 들어와도 넘치지 않도록 화면 폭에 맞춰 줄인다 */
+  font-size: clamp(1.15rem, 6.2vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.verdict__why {
+  margin: 6px 0 0;
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+}
+
+.verdict--none .verdict__amount {
+  font-family: var(--sans);
+  color: var(--seal);
+}
+
+/* ── 꼬리말 ───────────────────────────────────────────────── */
+
+.notes {
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.notes__line {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.notes__line:last-child { margin-bottom: 0; }
+.notes__line--dim { color: var(--ink-faint); }
+
+.notes__key {
+  flex: none;
+  width: 4.2em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ── 접근성 ───────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }

@@ -7,19 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="card">
+  <main class="sheet">
 
-    <header class="card__header">
-      <h1>증여세 계산기</h1>
-      <p class="scope">
-        현재 <strong>부모 → 성인 자녀 현금 증여</strong>만 지원합니다.
-      </p>
+    <header class="sheet__head">
+      <h1 class="sheet__title">증여세 계산기</h1>
+      <p class="sheet__scope">부모 &rarr; 성인 자녀 &middot; 현금 증여 &middot; 기한 내 신고</p>
     </header>
 
-    <section class="field">
-      <label class="field__label" for="amount">증여받은 금액</label>
-
-      <div class="field__input">
+    <section class="entry">
+      <label class="entry__label" for="amount">증여받은 금액</label>
+      <div class="entry__field">
         <input
           id="amount"
           type="text"
@@ -27,12 +24,27 @@
           autocomplete="off"
           placeholder="0"
           maxlength="19"
-          aria-describedby="amount-hint">
-        <span class="field__unit">원</span>
+          aria-describedby="amount-reading">
+        <span class="entry__unit" aria-hidden="true">원</span>
       </div>
-
-      <p id="amount-hint" class="hint" role="status">금액을 입력해 주세요.</p>
+      <p id="amount-reading" class="entry__reading">금액을 입력해 주세요.</p>
     </section>
+
+    <section class="ledger" aria-labelledby="ledger-caption">
+      <h2 class="ledger__caption" id="ledger-caption">계산 내역</h2>
+      <div id="ledger-body"></div>
+    </section>
+
+    <footer class="notes">
+      <p class="notes__line">
+        <span class="notes__key">신고기한</span>
+        <span>증여일이 속하는 달의 말일부터 <strong>3개월 이내</strong></span>
+      </p>
+      <p class="notes__line notes__line--dim">
+        <span class="notes__key">미반영</span>
+        <span>10년 내 사전증여 합산 &middot; 세대생략 할증 &middot; 가산세</span>
+      </p>
+    </footer>
 
   </main>
 
