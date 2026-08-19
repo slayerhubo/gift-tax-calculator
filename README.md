@@ -11,13 +11,25 @@
 **Sprint 1** (2026-08-19 ~ 2026-09-01) 진행 중
 지원 범위: 부모 → 성인 자녀 **현금** 증여 1케이스
 
+## 실행
+
+```bash
+npm test
+```
+
+```bash
+npx serve .
+```
+
+의존성 없음 — Node 24 내장 기능만 사용합니다. `npm install` 필요 없습니다.
+
 ## 구조
 
 ```
 src/
   tax-rules.js       세법 숫자만 담는 단일 소스 (세율·공제·공제율)
   tax-calculator.js  계산 로직 (S-03)
-tests/               브라우저 테스트 (S-04)
+tests/               node --test 테스트 (S-04)
 docs/
   S-01-research-note.md   세율·공제 조사 결과 + 출처
   issues/                 스프린트 백로그 (GitHub Issues 등록용)

@@ -25,17 +25,17 @@
 
 ## 등록 방법 A — gh CLI (권장)
 
+`gh` 2.97.0 설치 완료. 인증만 하면 됩니다.
+
+```bash
+gh auth login
+```
+
+인증 후 저장소 루트에서:
+
 ```bash
 bash scripts/create-issues.sh
 ```
-
-`gh`가 없다면 먼저 설치:
-
-```bash
-winget install --id GitHub.cli
-```
-
-설치 후 새 터미널에서 `gh auth login`.
 
 ## 등록 방법 B — 웹에서 수동 등록
 
@@ -62,7 +62,7 @@ S-06 (아무 때나)
 
 ## Definition of Done
 
-- [ ] 계산 로직 테스트 통과
+- [ ] `npm test` 통과
 - [ ] 세율·공제 숫자가 `src/tax-rules.js` 밖에 없음
 - [ ] 휴대폰에서 확인
 - [ ] 커밋 메시지에 스토리 ID (`S-03: 증여세 계산 함수 구현`)
