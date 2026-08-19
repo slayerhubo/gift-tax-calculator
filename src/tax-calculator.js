@@ -11,7 +11,8 @@ import {
   TAX_BRACKETS,
   RELATIONSHIP_DEDUCTIONS,
   FILING_TAX_CREDIT_RATE,
-  ROUNDING_UNIT,
+  TAX_BASE_ROUNDING_UNIT,
+  PAYMENT_ROUNDING_UNIT,
 } from './tax-rules.js';
 
 /** 이번 스프린트가 지원하는 유일한 관계: 직계존속(부모)으로부터 받음 */
@@ -34,7 +35,7 @@ function multiplyRate(value, rate) {
   return (value * Math.round(rate * SCALE)) / SCALE;
 }
 
-/** 절사 단위로 버림. ROUNDING_UNIT이 1이면 원 단위 버림. */
+/** 절사 단위로 버림. 예) floorTo(38_800_007, 10) -> 38_800_000 */
 function floorTo(value, unit) {
   return Math.floor(value / unit) * unit;
 }
@@ -65,21 +66,22 @@ export function calculateGiftTax(증여재산가액) {
   const 증여재산공제한도 = RELATIONSHIP_DEDUCTIONS[SUPPORTED_RELATIONSHIP].limit;
   const 증여재산공제 = Math.min(증여재산공제한도, 가액);
 
-  // 2) 과세표준 — 공제가 더 크면 0
-  const 과세표준 = 가액 - 증여재산공제;
+  // 2) 과세표준 — 공제가 더 크면 0. 1원 미만 절사(국고금관리법 §47②)
+  const 과세표준 = floorTo(가액 - 증여재산공제, TAX_BASE_ROUNDING_UNIT);
 
   // 3) 세율 구간 찾기
   const 구간 = findBracket(과세표준);
 
-  // 4) 산출세액 = 과세표준 × 세율 - 누진공제액
+  // 4) 산출세액 = 과세표준 × 세율 - 누진공제액 (계산 과정은 원 단위)
   const 산출세액계산값 = multiplyRate(과세표준, 구간.rate) - 구간.progressiveDeduction;
-  const 산출세액 = floorTo(Math.max(산출세액계산값, 0), ROUNDING_UNIT);
+  const 산출세액 = Math.floor(Math.max(산출세액계산값, 0));
 
   // 5) 신고세액공제 — 기한 내 신고를 전제로 항상 적용
-  const 신고세액공제 = floorTo(multiplyRate(산출세액, FILING_TAX_CREDIT_RATE), ROUNDING_UNIT);
+  const 신고세액공제 = Math.floor(multiplyRate(산출세액, FILING_TAX_CREDIT_RATE));
 
-  // 6) 납부할 세액
-  const 납부할세액 = 산출세액 - 신고세액공제;
+  // 6) 납부할 세액 — 실제로 국고에 들어가는 돈이라 10원 미만 절사(국고금관리법 §47①)
+  //    전액이 10원 미만이면 전액 절사되는 것도 이 계산으로 함께 처리된다.
+  const 납부할세액 = floorTo(산출세액 - 신고세액공제, PAYMENT_ROUNDING_UNIT);
 
   return {
     증여재산가액: 가액,
