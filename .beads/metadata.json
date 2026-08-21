@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "gift_tax_calculator",
+  "project_id": "ac71d6cd-cbee-4e82-9dde-ede4145a4f26"
+}
